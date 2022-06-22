@@ -30,33 +30,37 @@ public class HW04_ClassifyCuisine extends HW04_AbstractTest {
     @Test
     @DisplayName("01 Pho Bo is in Vietnamese cuisine")
     void whereIsPhoBo(){
-        JsonPath resp = given().spec(reqSpec)
+        HW04_CC_Response resp = given().spec(reqSpec)
                 .formParam("title","Pho Noodle")
                 .when()
                 .post(path)
                 .then()
                 .spec(respSpec)
                 .extract()
-                .jsonPath();
+                .response()
+                .body()
+                .as(HW04_CC_Response.class);
 
-        System.out.println("Cuisine is: " + resp.get("cuisine").toString());
-        assertThat(resp.get("cuisine"), equalTo("Vietnamese"));
+        System.out.println("Cuisine is: " + resp.getCuisine());
+        assertThat(resp.getCuisine(), equalTo("Vietnamese"));
     }
 
     @Test
     @DisplayName("02 Caesar salad is American cuisine")
     void whereIsCaesar(){
-        JsonPath resp = given().spec(reqSpec)
+        HW04_CC_Response resp = given().spec(reqSpec)
                 .formParam("title","Caesar salad")
                 .when()
                 .post(path)
                 .then()
                 .spec(respSpec)
                 .extract()
-                .jsonPath();
+                .response()
+                .body()
+                .as(HW04_CC_Response.class);
 
-        System.out.println("Cuisine is: " + resp.get("cuisine").toString());
-        assertThat(resp.get("cuisine"), equalTo("American"));
+        System.out.println("Cuisine is: " + resp.getCuisine());
+        assertThat(resp.getCuisine(), equalTo("American"));
     }
 
     @Test
@@ -85,20 +89,22 @@ public class HW04_ClassifyCuisine extends HW04_AbstractTest {
     @Test
     @DisplayName("04 Pizza has 0.95 confidence")
     void pizzasConfidence() {
-        JsonPath resp = given().spec(reqSpec)
+        HW04_CC_Response resp = given().spec(reqSpec)
                 .formParam("title", "pizza")
                 .when()
                 .post(path)
                 .then()
                 .spec(respSpec)
                 .extract()
-                .jsonPath();
+                .response()
+                .body()
+                .as(HW04_CC_Response.class);
 
-        System.out.println("Cuisine is: " + resp.get("cuisine").toString());
-        assertThat(resp.get("cuisine"), equalTo("Mediterranean"));
+        System.out.println("Cuisine is: " + resp.getCuisine());
+        assertThat(resp.getCuisine(), equalTo("Mediterranean"));
 
-        System.out.println("Confidence is: " + resp.get("confidence").toString());
-        assertThat(resp.get("confidence"), equalTo(0.95f));
+        System.out.println("Confidence is: " + resp.getConfidence());
+        assertThat(resp.getConfidence(), equalTo(0.95));
     }
 
     @Test

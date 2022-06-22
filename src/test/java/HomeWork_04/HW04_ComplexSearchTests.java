@@ -9,11 +9,12 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.*;
 
 
 public class HW04_ComplexSearchTests extends HW04_AbstractTest {
@@ -33,58 +34,68 @@ public class HW04_ComplexSearchTests extends HW04_AbstractTest {
     @Test
     @DisplayName("01 Pasta should exist in any cuisine")
     void isPastaExist(){
-        JsonPath resp = given().spec(reqSpec)
+        HW04_CS_Response resp = given().spec(reqSpec)
                 .queryParam("number", 5)
                 .when()
                 .get(path)
                 .then()
                 .spec(respSpec)
                 .extract()
-                .jsonPath();
-        System.out.println("totalResults = " + resp.get("totalResults"));
-        assertThat(resp.get("totalResults"), greaterThan(200));
+                .response()
+                .body()
+                .as(HW04_CS_Response.class);
+        System.out.println("totalResults = " + resp.getTotalResults());
+        assertThat(resp.getTotalResults(), greaterThan(200));
     }
 
     @Test
     @DisplayName("02 Number check")
     void numberCheck(){
         int number = 5;
-        JsonPath resp = given().spec(reqSpec)
+        HW04_CS_Response resp = given().spec(reqSpec)
                 .queryParam("number", number)
                 .when()
                 .get(path)
                 .then()
                 .spec(respSpec)
                 .extract()
-                .jsonPath();
-        System.out.println("number = " + resp.get("number"));
-        assertThat(resp.get("number"), equalTo(number));
+                .response()
+                .body()
+                .as(HW04_CS_Response.class);
+        System.out.println("number = " + resp.getNumber());
+        assertThat(resp.getNumber(), equalTo(number));
 
-        System.out.println("Array of results:\n" + resp.get("results").toString());
+        System.out.println("Array of results:\n" + Arrays.toString(resp.getResults()));
         //assertThat(resp.get("results"), arrayWithSize(equalTo(number)));
     }
 
     @Test
     @DisplayName("03 Most fastest pasta is \"Simple Parmesan Chili Pasta\"")
     void getMostFastestPasta(){
-        JsonPath resp = given().spec(reqSpec)
+        HW04_CS_Response resp = given().spec(reqSpec)
                 .queryParam("maxReadyTime", 15)
                 .when()
                 .get(path)
                 .then()
                 .spec(respSpec)
                 .extract()
-                .jsonPath();
+                .response()
+                .body()
+                .as(HW04_CS_Response.class);
 
-        System.out.println("totalResults = " + resp.get("totalResults"));
-        assertThat(resp.get("totalResults"), equalTo(1));
+        System.out.println("totalResults = " + resp.getTotalResults());
+        assertThat(resp.getTotalResults(), equalTo(1));
 
-        System.out.println(resp.get("results[0].title").toString());
-        assertThat(resp.get("results[0].title"), equalTo("Simple Parmesan Chili Pasta"));
+        System.out.println(Arrays.toString(resp.getResults()));
+        assertThat(Arrays.toString(resp.getResults()), containsString("Simple Parmesan Chili Pasta"));
     }
 
     @Test
     @DisplayName("04 Friday's pasta has ID 1697827")
+    /*В этом тесте не получилось реализовать проверку через класс,
+    так как в ответе появлялся параметр nutrition, который мне был не нужен,
+    но @JsonIgnore почему-то не отработал с сообщением Unknown parameter 'nutrition' not marked as ignored
+     */
     void isThereAlcoholPasta(){
         int minAlcohol = 38;
         int expectedID = 1697827;
@@ -114,7 +125,7 @@ public class HW04_ComplexSearchTests extends HW04_AbstractTest {
                 .then()
                 .spec(respSpec)
                 .contentType("application/json")
-                .time(lessThan(300l))
+                .time(lessThan(700l))
                 .header("Connection", Matchers.equalTo("keep-alive"));
     }
 }
