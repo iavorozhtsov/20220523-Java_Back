@@ -144,6 +144,7 @@ public class HW03_ChainTest extends HW03_AbstractTest{
                 .jsonPath();
 
         //Generate Shopping list from Meal Plan
+
         String todayDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         resp = given()
                 .pathParam("username", userName)
