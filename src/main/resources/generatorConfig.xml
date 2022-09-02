@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry
+            location="C:\Users\Ky391\.m2\repository\org\postgresql\postgresql\42.5.0\postgresql-42.5.0.jar"/>
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+        <jdbcConnection driverClass="org.postgresql.Driver"
+                        connectionURL="jdbc:postgresql://127.0.0.1:5433/postgres"
+                        userId="postgres"
+                        password="1">
+        </jdbcConnection>
+        <javaModelGenerator targetPackage="db.model"
+                            targetProject="src/main/java/HomeWork_06/">
+            <property name="enableSubPackages" value="true"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+        <sqlMapGenerator
+                targetPackage="db.mapper.xml"
+                targetProject="src/main/java/HomeWork_06/">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="db.dao"
+                             targetProject="src/main/java/HomeWork_06/">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+        <table tableName="categories">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="DB2" identity="true"/>
+        </table>
+        <table tableName="products">
+            <property name="useActualColumnNames" value="true"/>
+            <generatedKey column="id" sqlStatement="DB2" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>
